@@ -86,14 +86,15 @@ def tobs():
         most_active_station_id = active_stations[0][0]
 
         # Query temperature observations for the most active station for the last year
-        results = session.query(Measurement.tobs).\
+        results = session.query(Measurement.date,Measurement.tobs).\
                     filter(Measurement.station == most_active_station_id).\
                     filter(Measurement.date >= one_year_ago).all()
 
         # Convert the results to a list
-        temperatures = list(np.ravel(results))
+        temperature_data = [(date, temp) for date, temp in results]
 
-        return jsonify(temperatures)
+
+        return jsonify(temperature_data)
     else:
         return "No active stations found."
 
